@@ -6,6 +6,11 @@ img:hover {
     opacity: 75%;
 }
 
+.site-title {
+    text-align: justify;
+    text-justify: inter-word;
+}
+
 .square-preview {
     width:200px;
     height:200px;
