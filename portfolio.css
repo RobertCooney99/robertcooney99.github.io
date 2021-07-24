@@ -23,11 +23,11 @@ img:hover {
 }
 
 .ui-preview {
-    width: 90%;
+    width: 100%;
     object-fit: contain;
 }
 
-.square-preview, .poster-preview {
+.square-preview, .poster-preview, .ui-preview {
     margin: 0 1em;
 }
 
@@ -57,7 +57,7 @@ body {
     margin: 1em;
     margin-right: 2em;
     font-size: 1.2em;
-    width: 100%;
+    max-width: 85%;
     text-decoration: underline solid black 3px;
     text-underline-offset: 2px;
 }
