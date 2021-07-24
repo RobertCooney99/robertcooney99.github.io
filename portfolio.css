@@ -43,6 +43,7 @@ body {
 
 .section-title {
     margin: 1em;
+    padding-right: 2em;
     font-size: 1.2em;
     width: 100%;
     text-decoration: underline solid black 3px;
