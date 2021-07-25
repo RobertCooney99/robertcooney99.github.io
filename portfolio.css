@@ -15,7 +15,7 @@ img:hover {
 }
 
 .about-me {
-    padding: 0 2em;
+    padding: 0 2rem;
 }
 
 .square-preview {
@@ -36,14 +36,14 @@ img:hover {
 }
 
 .square-preview, .poster-preview, .ui-preview {
-    margin: 0 1em;
+    margin: 0 1rem;
 }
 
 nav {
     text-transform: uppercase;
-    margin: 1em;
+    margin: 1rem;
     padding: 0.75em 0;
-    font-size: 1.2em;
+    font-size: 1.2rem;
     font-family: 'Raleway', sans-serif;
     border-bottom: 3px solid black;
     display: flex;
@@ -62,21 +62,22 @@ body {
 }
 
 .section-title {
-    margin: 1em;
-    margin-right: 2em;
-    padding-left: 1em;
-    font-size: 0.9em;
+    margin: 1rem;
+    margin-right: 2rem;
+    padding-left: 1rem;
+    font-size: 0.9rem;
+    line-height: 1.5;
     max-width: 85%;
     text-decoration: underline solid black 3px;
     text-underline-offset: 2px;
 }
 
 h1 {
-    font-size: 1.2em;
+    font-size: 1.2rem;
 }
 
 h2 {
-    font-size: 1em;
+    font-size: 1rem;
 }
 
 h1, h2 {
@@ -96,20 +97,20 @@ h1, h2 {
     max-width: 800px;
     min-width: 250px;
     flex-grow: 1;
-    font-size: 0.9em;
+    font-size: 0.9rem;
 }
 
 .main-container {
     display: flex;
     justify-content: center;
-    margin: 0 2em;
-    margin-bottom: 2em;
+    margin: 0 2rem;
+    margin-bottom: 2rem;
 }
 
 .design-title {
-    font-size: 0.85em;
+    font-size: 0.85rem;
     text-align: center;
     color: rgb(32, 32, 32);
     width: 100%;
-    padding: 1em 0;
+    padding: 1rem 0;
 }
