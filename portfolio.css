@@ -102,6 +102,8 @@ h1, h2 {
 .main-container {
     display: flex;
     justify-content: center;
+    margin: 0 2em;
+    margin-bottom: 2em;
 }
 
 .design-title {
