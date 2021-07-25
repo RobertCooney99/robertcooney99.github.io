@@ -1,3 +1,7 @@
+body {
+    margin: 0;
+}
+
 img {
     transition: opacity 1s ease-out;
 }
@@ -8,6 +12,10 @@ img:hover {
 
 .site-title {
     
+}
+
+.about-me {
+    padding: 0 2em;
 }
 
 .square-preview {
@@ -23,7 +31,7 @@ img:hover {
 }
 
 .ui-preview {
-    width: 100%;
+    width: 95%;
     object-fit: contain;
 }
 
@@ -56,7 +64,7 @@ body {
 .section-title {
     margin: 1em;
     margin-right: 2em;
-    font-size: 1.2em;
+    font-size: 0.9em;
     max-width: 85%;
     text-decoration: underline solid black 3px;
     text-underline-offset: 2px;
@@ -87,6 +95,7 @@ h1, h2 {
     max-width: 800px;
     min-width: 250px;
     flex-grow: 1;
+    font-size: 0.9em;
 }
 
 .main-container {
@@ -95,7 +104,7 @@ h1, h2 {
 }
 
 .design-title {
-    font-size: 0.7em;
+    font-size: 0.85em;
     text-align: center;
     color: rgb(32, 32, 32);
     width: 100%;
