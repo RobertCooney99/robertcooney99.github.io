@@ -1,5 +1,5 @@
 body {
-    margin: 0;
+    margin: 2em;
 }
 
 img {
@@ -10,12 +10,11 @@ img:hover {
     opacity: 90%;
 }
 
-.site-title {
-    
-}
-
 .about-me {
     padding: 0 2rem;
+    font-size: 0.7rem;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .square-preview {
@@ -31,7 +30,7 @@ img:hover {
 }
 
 .ui-preview {
-    width: 95%;
+    width: 200px;
     object-fit: contain;
 }
 
@@ -41,7 +40,6 @@ img:hover {
 
 nav {
     text-transform: uppercase;
-    margin: 1rem;
     padding: 0.75em 0;
     font-size: 1.2rem;
     font-family: 'Raleway', sans-serif;
@@ -62,9 +60,8 @@ body {
 }
 
 .section-title {
-    margin: 1rem;
-    margin-right: 2rem;
     padding-left: 1rem;
+    margin: 1em 0;
     font-size: 0.9rem;
     line-height: 1.5;
     max-width: 85%;
@@ -95,7 +92,6 @@ h1, h2 {
     justify-content: space-around;
     align-content: center;
     max-width: 800px;
-    min-width: 250px;
     flex-grow: 1;
     font-size: 0.9rem;
 }
@@ -103,8 +99,12 @@ h1, h2 {
 .main-container {
     display: flex;
     justify-content: center;
-    margin: 0 2rem;
     margin-bottom: 2rem;
+}
+
+.main-flex {
+    width: 100%;
+    max-width: 800px;
 }
 
 .design-title {
