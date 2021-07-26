@@ -94,7 +94,6 @@ h1, h2 {
     align-content: center;
     max-width: 800px;
     flex-grow: 1;
-    font-size: 0.9rem;
 }
 
 .main-container {
