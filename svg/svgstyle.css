@@ -1,0 +1,114 @@
+.skin_colour {
+    width: 25px;
+    height: 25px;
+    display:inline-block;
+    border-radius: 100%;
+}
+
+.bg_colour {
+    width: 25px;
+    height: 25px;
+    display:inline-block;
+    border-radius: 100%;
+}
+
+.colour_option {
+    width: 25px;
+    height: 25px;
+    display:inline-block;
+    border-radius: 100%;
+}
+
+body {
+    margin: 0;
+    font-family: 'Raleway', sans-serif;
+    font-size: 12px;
+}
+
+button {
+    font-size: 12px;
+}
+
+.main-container {
+    margin-top: 10px;
+    display: flex;
+    flex-grow: 1;
+    max-width: 800px;
+}
+
+.flex-main {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.avatar-container {
+
+}
+
+.options-container {
+    flex-grow: 1;
+    padding-left: 50px;
+}
+
+h1 {
+    font-size: 16px;
+    margin: 10px 0px;
+    display: inline;
+}
+
+.options-section-title {
+    display: flex;
+    align-items: center;
+}
+
+.options-section-options {
+    padding-left: 20px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.options-section-subtitle {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.show-hide-options {
+    width: 15px;
+    height: 15px;
+    display: inline-block;
+    margin-left: 10px;
+    background-color: rgb(216, 216, 216);
+    border-radius: 100%;
+}
+
+.show-options-icon {
+    background-image: url(icons/down.png);
+    background-size: 15px;
+}
+
+.hide-options-icon {
+    background-image: url(icons/up.png);
+    background-size: 15px;
+}
+
+.hidden-options {
+    display: none;
+}
+
+.visible-options {
+    display: block;
+}
+
+.option-button {
+    background-color: rgb(216, 216, 216);
+    border-radius: 5%;
+    padding: 4px;
+    margin: 3px;
+    margin-bottom: 7px;
+    display: inline-block;
+}
+
+.option-button:hover {
+    background-color: rgb(182, 182, 182);
+}
