@@ -1,1 +1,1021 @@
+<!DOCTYPE html>
+<html lang="en">
 
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="svgstyle.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@800&display=swap" rel="stylesheet">
+
+    <title>SVG Profile</title>
+</head>
+
+<body>
+    <div class="flex-main">
+        <div class="main-container">
+            <div class="avatar-container" id="avatar-container">
+                <script>
+                    var svgns = "http://www.w3.org/2000/svg";
+                    var counter = 0;
+                    var avatar_nums = 1;
+                    var avatar_container = document.getElementById("avatar-container");
+
+                    var hex_to_hsl = function (H) {
+                        let r = 0, g = 0, b = 0;
+                        if (H.length == 4) {
+                            r = "0x" + H[1] + H[1];
+                            g = "0x" + H[2] + H[2];
+                            b = "0x" + H[3] + H[3];
+                        } else if (H.length == 7) {
+                            r = "0x" + H[1] + H[2];
+                            g = "0x" + H[3] + H[4];
+                            b = "0x" + H[5] + H[6];
+                        }
+                        // Then to HSL
+                        r /= 255;
+                        g /= 255;
+                        b /= 255;
+                        let cmin = Math.min(r, g, b),
+                            cmax = Math.max(r, g, b),
+                            delta = cmax - cmin,
+                            h = 0,
+                            s = 0,
+                            l = 0;
+
+                        if (delta == 0)
+                            h = 0;
+                        else if (cmax == r)
+                            h = ((g - b) / delta) % 6;
+                        else if (cmax == g)
+                            h = (b - r) / delta + 2;
+                        else
+                            h = (r - g) / delta + 4;
+
+                        h = Math.round(h * 60);
+
+                        if (h < 0)
+                            h += 360;
+
+                        l = (cmax + cmin) / 2;
+                        s = delta == 0 ? 0 : delta / (1 - Math.abs(2 * l - 1));
+                        s = +(s * 100).toFixed(1);
+                        l = +(l * 100).toFixed(1);
+
+                        return [h, s, l];
+                    }
+
+                    var hsl_to_hex = function (hsl_val) {
+                        h = hsl_val[0];
+                        s = hsl_val[1];
+                        l = hsl_val[2];
+
+                        s /= 100;
+                        l /= 100;
+
+                        let c = (1 - Math.abs(2 * l - 1)) * s,
+                            x = c * (1 - Math.abs((h / 60) % 2 - 1)),
+                            m = l - c / 2,
+                            r = 0,
+                            g = 0,
+                            b = 0;
+
+                        if (0 <= h && h < 60) {
+                            r = c; g = x; b = 0;
+                        } else if (60 <= h && h < 120) {
+                            r = x; g = c; b = 0;
+                        } else if (120 <= h && h < 180) {
+                            r = 0; g = c; b = x;
+                        } else if (180 <= h && h < 240) {
+                            r = 0; g = x; b = c;
+                        } else if (240 <= h && h < 300) {
+                            r = x; g = 0; b = c;
+                        } else if (300 <= h && h < 360) {
+                            r = c; g = 0; b = x;
+                        }
+                        // Having obtained RGB, convert channels to hex
+                        r = Math.round((r + m) * 255).toString(16);
+                        g = Math.round((g + m) * 255).toString(16);
+                        b = Math.round((b + m) * 255).toString(16);
+
+                        // Prepend 0s, if necessary
+                        if (r.length == 1)
+                            r = "0" + r;
+                        if (g.length == 1)
+                            g = "0" + g;
+                        if (b.length == 1)
+                            b = "0" + b;
+                        return "#" + r + g + b;
+                    }
+
+                    var calc_neck_colour = function (skin_colour) {
+                        var hsl_val = hex_to_hsl(skin_colour);
+                        hsl_val[2] = Math.max(0, hsl_val[2] - 4);
+                        return (hsl_to_hex(hsl_val));
+                    }
+
+                    var calc_neck_shadow_colour = function (skin_colour) {
+                        var hsl_val = hex_to_hsl(skin_colour);
+                        hsl_val[2] = Math.max(0, hsl_val[2] - 7);
+                        return (hsl_to_hex(hsl_val));
+                    }
+
+                    var calc_eyebrow_colour = function (colour) {
+                        var hsl_val = hex_to_hsl(colour);
+                        hsl_val[2] = Math.max(0, hsl_val[2] - 20);
+                        return (hsl_to_hex(hsl_val));
+                    }
+
+                    var calc_body_sec_colour = function (body_colour) {
+                        var hsl_val = hex_to_hsl(body_colour);
+                        hsl_val[2] = Math.max(0, hsl_val[2] - 5);
+                        return (hsl_to_hex(hsl_val));
+                    }
+
+
+                    function getRandomInt(min, max) {
+                        min = Math.ceil(min);
+                        max = Math.floor(max);
+                        return Math.floor(Math.random() * (max - min + 1)) + min;
+                    }
+
+
+
+                    console.log("hey");
+                    counter += 1;
+
+
+                    var svg_code = `<svg id="avatar${counter}" width="200px" height="200px" xmlns="http://www.w3.org/2000/svg"
+                                xmlns:xlink="http://www.w3.org/1999/xlink">
+                                <defs id="defs${counter}">
+                                    <mask id="avatar_mask${counter}">
+                                        <rect id="rect_mask${counter}" x="0" y="0" rx="100" ry="100" width="200px" height="200px"
+                                            fill="white" />
+                                    </mask>
+                
+                                    <mask id="neck_mask${counter}">
+                                    </mask>
+                
+                                    <mask id="body_mask${counter}">
+                                    </mask>
+                                </defs>
+                
+                                <g id="background-g${counter}" mask="url(#avatar_mask${counter})">
+                                </g>
+                
+                                <g id="behind-neck-g${counter}" mask="url(#avatar_mask${counter})">
+                                </g>
+                
+                                <g id="neck-g${counter}" mask="url(#avatar_mask${counter})">
+                                </g>
+                
+                                <g id="neck-shadow-g${counter}">
+                                </g>
+                
+                                <g id="behind-face-g${counter}" mask="url(#avatar_mask${counter})">
+                                </g>
+            
+                                <g id="face-g${counter}" mask="url(#avatar_mask${counter})">
+                                </g>
+                
+                                <g id="eyebrow-g${counter}" mask="url(#avatar_mask${counter})">
+                                </g>
+                
+                                <g id="body-g${counter}" mask="url(#avatar_mask${counter})">
+                                </g>
+                
+                                <g id="hair-g${counter}" mask="url(#avatar_mask${counter})">
+                                </g>
+                
+                            </svg>`;
+
+                    avatar_container.innerHTML += svg_code;
+
+                    var avatar = document.getElementById(`avatar${counter}`);
+                    var background_group = document.getElementById(`background-g${counter}`);
+                    var face_group = document.getElementById(`face-g${counter}`);
+                    var behind_face_group = document.getElementById(`behind-face-g${counter}`);
+                    var behind_neck_group = document.getElementById(`behind-neck-g${counter}`);
+                    var neck_group = document.getElementById(`neck-g${counter}`);
+                    var neck_shadow_group = document.getElementById(`neck-shadow-g${counter}`);
+                    var body_group = document.getElementById(`body-g${counter}`);
+                    var hair_group = document.getElementById(`hair-g${counter}`);
+                    var eyebrow_group = document.getElementById(`eyebrow-g${counter}`);
+                    var defs = document.getElementById(`defs${counter}`);
+                    var body_mask = document.getElementById(`body_mask${counter}`);
+
+                    var head_center = 100;
+                    var head_bottom = 135;
+                    var head_top = 35;
+
+                    var jaw_width = null;
+                    var jaw_y_pos = null;
+                    var forehead_width = null;
+                    var forehead_y_pos = null;
+
+                    var neck_start_y = 15;
+                    var neck_width = null;
+
+                    var background_colour = null;
+                    var background_radius = 100;
+
+                    var body_type = null;
+
+                    var skin_colour = null;
+                    var neck_colour = null;
+                    var neck_shadow_colour = null;
+                    var eyebrow_colour = null;
+                    var hair_colour = '#302313';
+
+                    var body_colour = null;
+                    var body_sec_colour = null;
+
+                    var eyebrow_width = null;
+                    var eyebrow_height = null;
+                    var eyebrow_pos_x = null;
+                    var eyebrow_pos_y = null;
+                    var eyebrow_curve = null;
+                    var eyebrow_rotation = null;
+
+                    var hair_type = 1;
+                    var afro_width = null;
+                    var afro_height = null;
+                    afro_width = getRandomInt(0, 30);
+                    if ((afro_width >= 0) && (afro_width <= 10)) {
+                        afro_height = 3;
+                    } else {
+                        afro_height = 2;
+                    }
+
+                    console.log(afro_width);
+                    console.log(afro_height);
+
+                    var v_neck_height = getRandomInt(16, 20);
+                    var body_down = getRandomInt(36, 40);
+                    var hood_width = getRandomInt(55, 65);
+
+                    head_top = getRandomInt(30, 40);
+                    head_bottom = getRandomInt(130, 140);
+
+                    var skin_colour_list = ["#8D5524", "#C68642", "#E0AC69", "#F1C27D", "#FFDBAC"];
+                    skin_colour = skin_colour_list[Math.floor(Math.random() * skin_colour_list.length)];
+
+                    var bg_colour_list = ["#FFCCF9", "#FBE4FF", "#D5AAFF", "#DCD3FF", "#AFF8DB", "#FFCBC1"];
+                    var bg_h = getRandomInt(0, 360);
+                    var bg_s = getRandomInt(30, 50);
+                    var bg_l = getRandomInt(70, 90);
+                    background_colour = hsl_to_hex([bg_h, bg_s, bg_l]);
+                    //background_colour = bg_colour_list[Math.floor(Math.random() * bg_colour_list.length)];
+
+                    var body_colour_list = ["#006347", "#608921", "#019477", "#97D0A7", "#54B9C1", "#5C589D", "#9C58A1", "#D38895", "#DD3F4E", "#6A6A68"];
+                    body_colour = body_colour_list[Math.floor(Math.random() * body_colour_list.length)];
+
+                    var body_type_list = ["hood", "collar", "none"];
+                    body_type = body_type_list[Math.floor(Math.random() * body_type_list.length)];
+
+                    neck_colour = calc_neck_colour(skin_colour);
+                    neck_shadow_colour = calc_neck_shadow_colour(skin_colour);
+                    eyebrow_colour = calc_eyebrow_colour(hair_colour);
+                    body_sec_colour = calc_body_sec_colour(body_colour);
+
+                    jaw_width = getRandomInt(57, 70);
+                    jaw_y_pos = getRandomInt(15, 25);
+                    forehead_width = getRandomInt(73, 83);
+                    forehead_y_pos = getRandomInt(30, 40);
+                    neck_width = getRandomInt(46, 52);
+
+                    eyebrow_width = getRandomInt(18, 22);
+                    eyebrow_height = getRandomInt(5, 9);
+                    eyebrow_pos_x = getRandomInt(8, 10);
+                    eyebrow_pos_y = getRandomInt(9, 13);
+                    eyebrow_curve = getRandomInt(1, 4);
+                    eyebrow_rotation = getRandomInt(-5, 20);
+
+                    var draw_eyebrow_left = function () {
+                        var eyebrow_left_start_x = head_center - eyebrow_pos_x;
+                        var eyebrow_left_end_x = eyebrow_left_start_x - eyebrow_width;
+                        var eyebrow_left_start_y = head_center - forehead_y_pos + eyebrow_pos_y;
+                        var eyebrow_left_end_y = eyebrow_left_start_y + eyebrow_height;
+                        var eyebrow_left_mid_x = eyebrow_left_start_x - ((eyebrow_left_start_x - eyebrow_left_end_x) / 2);
+                        var eyebrow_left_mid_y = eyebrow_left_end_y - ((eyebrow_left_end_y - eyebrow_left_start_y) / 2);
+
+                        var eyebrow_left_final_x = eyebrow_left_start_x + 2;
+                        var eyebrow_left_final_y = eyebrow_left_end_y - (eyebrow_height / 2);
+                        var eyebrow_left_final_control_x = eyebrow_left_end_x + (eyebrow_width / eyebrow_curve);
+
+                        var eyebrow_left_element = document.getElementById(`eyebrow_left_svg${counter}`);
+                        if (eyebrow_left_element) {
+                            eyebrow_group.removeChild(eyebrow_left_element);
+                        }
+
+                        var eyebrow_left_coords = "";
+
+                        eyebrow_left_coords += `M ${eyebrow_left_start_x} ${eyebrow_left_start_y}`;
+                        eyebrow_left_coords += ` Q ${eyebrow_left_end_x} ${eyebrow_left_start_y}, ${eyebrow_left_end_x} ${eyebrow_left_end_y}`;
+                        eyebrow_left_coords += ` Q ${eyebrow_left_final_control_x} ${eyebrow_left_start_y}, ${eyebrow_left_final_x} ${eyebrow_left_final_y}`;
+
+                        var eyebrow_left_path = document.createElementNS(svgns, "path");
+                        eyebrow_left_path.setAttributeNS(null, `id`, `eyebrow_left_svg${counter}`);
+                        eyebrow_left_path.setAttributeNS(null, `style`, `fill: ${eyebrow_colour}`);
+                        eyebrow_left_path.setAttributeNS(null, `d`, eyebrow_left_coords);
+                        eyebrow_left_path.setAttributeNS(null, `transform`, `rotate(${eyebrow_rotation} ${eyebrow_left_mid_x} ${eyebrow_left_mid_y})`);
+                        eyebrow_group.appendChild(eyebrow_left_path);
+                    }
+
+                    var draw_eyebrow_right = function () {
+                        var eyebrow_right_start_x = head_center + eyebrow_pos_x;
+                        var eyebrow_right_end_x = eyebrow_right_start_x + eyebrow_width;
+                        var eyebrow_right_start_y = head_center - forehead_y_pos + eyebrow_pos_y;
+                        var eyebrow_right_end_y = eyebrow_right_start_y + eyebrow_height;
+                        var eyebrow_right_mid_x = eyebrow_right_end_x - ((eyebrow_right_end_x - eyebrow_right_start_x) / 2);
+                        var eyebrow_right_mid_y = eyebrow_right_end_y - ((eyebrow_right_end_y - eyebrow_right_start_y) / 2);
+
+                        var eyebrow_right_final_x = eyebrow_right_start_x - 2;
+                        var eyebrow_right_final_y = eyebrow_right_end_y - (eyebrow_height / 2);
+                        var eyebrow_right_final_control_x = eyebrow_right_end_x - (eyebrow_width / eyebrow_curve);
+
+                        var eyebrow_right_element = document.getElementById(`eyebrow_right_svg${counter}`);
+                        if (eyebrow_right_element) {
+                            eyebrow_group.removeChild(eyebrow_right_element);
+                        }
+
+                        var eyebrow_right_coords = "";
+
+                        eyebrow_right_coords += `M ${eyebrow_right_start_x} ${eyebrow_right_start_y}`;
+                        eyebrow_right_coords += ` Q ${eyebrow_right_end_x} ${eyebrow_right_start_y}, ${eyebrow_right_end_x} ${eyebrow_right_end_y}`;
+                        eyebrow_right_coords += ` Q ${eyebrow_right_final_control_x} ${eyebrow_right_start_y}, ${eyebrow_right_final_x} ${eyebrow_right_final_y}`;
+
+                        var eyebrow_right_path = document.createElementNS(svgns, "path");
+                        eyebrow_right_path.setAttributeNS(null, `id`, `eyebrow_right_svg${counter}`);
+                        eyebrow_right_path.setAttributeNS(null, `style`, `fill: ${eyebrow_colour}`);
+                        eyebrow_right_path.setAttributeNS(null, `d`, eyebrow_right_coords);
+                        eyebrow_right_path.setAttributeNS(null, `transform`, `rotate(${eyebrow_rotation * -1} ${eyebrow_right_mid_x} ${eyebrow_right_mid_y})`);
+                        eyebrow_group.appendChild(eyebrow_right_path);
+                    }
+
+                    var draw_eyebrows = function () {
+                        draw_eyebrow_left();
+                        draw_eyebrow_right();
+                    }
+
+                    var draw_hood = function () {
+                        var hood_element = document.getElementById(`hood_svg${counter}`);
+                        if (hood_element) {
+                            behind_neck_group.removeChild(hood_element);
+                        }
+
+                        var hood_shadow_element = document.getElementById(`hood_shadow_svg${counter}`);
+                        if (hood_shadow_element) {
+                            behind_neck_group.removeChild(hood_shadow_element);
+                        }
+
+                        var hood_bottom_y = head_center + neck_start_y + body_down + v_neck_height;
+                        var hood_left_x = head_center - hood_width;
+                        var hood_right_x = head_center + hood_width;
+                        var hood_top_y = head_center + neck_start_y + 35;
+
+                        var hood_middle_y = hood_bottom_y - (hood_bottom_y - hood_top_y);
+
+                        var hood_coords = "";
+
+                        hood_coords += `M ${head_center} ${hood_bottom_y}`;
+                        hood_coords += ` Q ${hood_left_x} ${hood_bottom_y}, ${hood_left_x} ${hood_top_y}`;
+                        hood_coords += ` Q ${head_center} ${hood_top_y - 40}, ${hood_right_x} ${hood_top_y}`;
+                        hood_coords += ` Q ${hood_right_x} ${hood_bottom_y}, ${head_center} ${hood_bottom_y}`;
+
+                        var hood_path = document.createElementNS(svgns, "path");
+                        hood_path.setAttributeNS(null, `id`, `hood_svg${counter}`);
+                        hood_path.setAttributeNS(null, `style`, `fill: ${body_colour}`);
+                        hood_path.setAttributeNS(null, `d`, hood_coords);
+                        behind_neck_group.appendChild(hood_path);
+
+                        var hood_shadow_left_x = head_center - (hood_width - (hood_width / 5));
+                        var hood_shadow_right_x = head_center + (hood_width - (hood_width / 5));
+                        var hood_shadow_top_y = hood_top_y + 4;
+
+                        var hood_shadow_coords = "";
+
+                        hood_shadow_coords += `M ${head_center} ${hood_bottom_y}`;
+                        hood_shadow_coords += ` Q ${hood_shadow_left_x} ${hood_bottom_y}, ${hood_shadow_left_x} ${hood_shadow_top_y}`;
+                        hood_shadow_coords += ` Q ${head_center} ${hood_shadow_top_y - 40}, ${hood_shadow_right_x} ${hood_shadow_top_y}`;
+                        hood_shadow_coords += ` Q ${hood_shadow_right_x} ${hood_bottom_y}, ${head_center} ${hood_bottom_y}`;
+
+                        var hood_shadow = document.createElementNS(svgns, "path");
+                        hood_shadow.setAttributeNS(null, `id`, `hood_shadow_svg${counter}`);
+                        hood_shadow.setAttributeNS(null, `style`, `fill: ${body_sec_colour}`);
+                        hood_shadow.setAttributeNS(null, `d`, hood_shadow_coords);
+                        behind_neck_group.appendChild(hood_shadow);
+                    }
+
+                    var draw_body = function () {
+                        body_sec_colour = calc_body_sec_colour(body_colour);
+
+                        var body_element = document.getElementById(`body_svg${counter}`);
+                        if (body_element) {
+                            body_group.removeChild(body_element);
+                        }
+
+                        var body_mask_element = document.getElementById(`body_mask_svg${counter}`);
+                        if (body_mask_element) {
+                            body_mask.removeChild(body_mask_element);
+                        }
+
+                        var collar_element = document.getElementById(`collar_svg${counter}`);
+                        if (collar_element) {
+                            body_group.removeChild(collar_element);
+                        }
+
+                        var body_start_y = head_center + neck_start_y + body_down;
+                        var body_start_x = head_center - (neck_width / 2);
+                        var body_end_x = head_center + (neck_width / 2);
+                        var body_v_neck = body_start_y + v_neck_height;
+
+                        var body_coords = "";
+
+                        body_coords += `M ${head_center} ${body_v_neck}`;
+                        //body_coords += ` L ${body_start_x} ${body_start_y}`;
+                        body_coords += ` Q ${(head_center - ((head_center - body_start_x) / 1))} ${body_v_neck - ((body_v_neck - body_start_y) / 2)}, ${body_start_x} ${body_start_y}`;
+                        body_coords += ` Q ${head_center - (body_start_x)} ${body_start_y}, ${0} ${body_start_y + 30}`;
+                        body_coords += ` L ${0} ${200}`;
+                        body_coords += ` L ${200} ${200}`;
+                        body_coords += ` L ${200} ${body_start_y + body_down}`;
+                        body_coords += ` Q ${head_center + (body_start_x)} ${body_start_y}, ${body_end_x} ${body_start_y}`;
+                        body_coords += ` Q ${head_center + ((body_end_x - head_center) / 1)} ${body_v_neck - ((body_v_neck - body_start_y) / 2)}, ${head_center} ${body_v_neck}`;
+
+                        var body_path = document.createElementNS(svgns, "path");
+                        body_path.setAttributeNS(null, `id`, `body_svg${counter}`);
+                        body_path.setAttributeNS(null, `style`, `fill: ${body_colour}`);
+                        body_path.setAttributeNS(null, `d`, body_coords);
+                        body_group.appendChild(body_path);
+
+                        var body_mask_path = document.createElementNS(svgns, "path");
+                        body_mask_path.setAttributeNS(null, `id`, `body_mask_svg${counter}`);
+                        body_mask_path.setAttributeNS(null, `style`, `fill: ${body_colour}`);
+                        body_mask_path.setAttributeNS(null, `d`, body_coords);
+                        body_mask.appendChild(body_mask_path);
+
+                        if (body_type == 'collar') {
+                            neck_height_diff = v_neck_height;
+
+                            collar_height = 15;
+                            collar_width = v_neck_height + 15;
+
+                            var collar_coords = "";
+                            collar_coords += `M ${head_center} ${body_v_neck + collar_height}`;
+                            collar_coords += ` L ${head_center + collar_width} ${body_start_y}`;
+                            collar_coords += ` L ${head_center - collar_width} ${body_start_y}`;
+                            collar_coords += ` L ${head_center} ${body_v_neck + collar_height}`;
+
+                            var collar_path = document.createElementNS(svgns, "path");
+                            collar_path.setAttributeNS(null, `id`, `collar_svg${counter}`);
+                            collar_path.setAttributeNS(null, `style`, `fill: ${body_sec_colour}`);
+                            collar_path.setAttributeNS(null, `d`, collar_coords);
+                            collar_path.setAttributeNS(null, `mask`, `url(#body_mask${counter})`);
+                            body_group.appendChild(collar_path);
+                        }
+
+                        if (body_type == 'hood') {
+                            draw_hood();
+                        }
+                    }
+
+
+
+                    var draw_neck = function () {
+                        var neck_element = document.getElementById(`neck_svg${counter}`);
+                        if (neck_element) {
+                            neck_group.removeChild(neck_element);
+                        }
+
+                        var neck_left_x = head_center - (neck_width / 2);
+                        var neck_top_y = head_center + neck_start_y;
+
+                        var neck_rect = document.createElementNS(svgns, "rect");
+                        neck_rect.setAttributeNS(null, `id`, `neck_svg${counter}`);
+                        neck_rect.setAttributeNS(null, `style`, `fill: ${neck_colour}`);
+                        neck_rect.setAttributeNS(null, `x`, `${neck_left_x}`);
+                        neck_rect.setAttributeNS(null, `y`, `${neck_top_y}`);
+                        neck_rect.setAttributeNS(null, `width`, `${neck_width}`);
+                        neck_rect.setAttributeNS(null, `height`, `100`);
+
+                        neck_group.appendChild(neck_rect);
+                        draw_body();
+                    }
+
+                    var draw_neck_shadow = function () {
+                        var center_x = 100;
+
+                        var jaw_left_x = center_x - (jaw_width / 2);
+                        var jaw_right_x = center_x + (jaw_width / 2);
+                        var jaw_y = head_center + jaw_y_pos;
+                        var jaw_control_y = head_bottom + 30;
+
+                        neck_shadow_coords = "";
+                        neck_shadow_coords += `M ${jaw_left_x} ${jaw_y}`;
+                        neck_shadow_coords += ` Q ${center_x} ${jaw_control_y}, ${jaw_right_x} ${jaw_y}`;
+                        neck_shadow_coords += ` L ${jaw_left_x} ${jaw_y}`;
+
+                        neck_colour = calc_neck_colour(skin_colour);
+                        draw_neck();
+                        var neck_shadow_element = document.getElementById(`neck_shadow_svg${counter}`);
+                        if (neck_shadow_element) {
+                            neck_shadow_group.removeChild(neck_shadow_element);
+                        }
+                        var neck_shadow_path = document.createElementNS(svgns, "path");
+                        neck_shadow_path.setAttributeNS(null, `id`, `neck_shadow_svg${counter}`);
+                        neck_shadow_path.setAttributeNS(null, `style`, `fill: ${neck_shadow_colour}`);
+                        neck_shadow_path.setAttributeNS(null, `d`, neck_shadow_coords);
+                        neck_shadow_group.appendChild(neck_shadow_path);
+                    }
+
+                    var create_background = function () {
+                        var background_rect = document.createElementNS(svgns, `rect`);
+                        background_rect.setAttributeNS(null, `id`, `bg_svg${counter}`);
+                        background_rect.setAttributeNS(null, `x`, 0);
+                        background_rect.setAttributeNS(null, `y`, 0);
+                        background_rect.setAttributeNS(null, `width`, 200);
+                        background_rect.setAttributeNS(null, `height`, 200);
+                        background_rect.setAttributeNS(null, `rx`, background_radius);
+                        background_rect.setAttributeNS(null, `ry`, background_radius);
+                        background_rect.setAttributeNS(null, `style`, `fill: ${background_colour}`);
+                        return background_rect;
+                    }
+
+                    var add_background = function (bg) {
+                        var bg_element = document.getElementById(`bg_svg${counter}`);
+                        if (bg_element) {
+                            background_group.removeChild(bg_element);
+                        }
+
+                        var mask_element = document.getElementById(`rect_mask${counter}`);
+                        mask_element.setAttributeNS(null, `rx`, background_radius);
+                        mask_element.setAttributeNS(null, `ry`, background_radius);
+
+                        background_group.appendChild(bg);
+                    }
+
+                    var calc_coords = function () {
+                        var face_coords = "";
+                        var center_x = 100;
+
+                        var jaw_left_x = center_x - (jaw_width / 2);
+                        var jaw_right_x = center_x + (jaw_width / 2);
+                        var jaw_y = head_center + jaw_y_pos;
+                        var jaw_control_y = head_bottom + 20;
+                        console.log(jaw_y);
+
+                        var forehead_right_x = center_x + (forehead_width / 2);
+                        var forehead_left_x = center_x - (forehead_width / 2);
+                        var forehead_y = head_center - forehead_y_pos;
+                        var jaw_forehead_diff = jaw_y - forehead_y;
+                        var forehead_control_y = jaw_y - (jaw_forehead_diff / 2);
+                        var head_control_space = (center_x - forehead_left_x) / 4;
+                        var head_control_right_x = forehead_right_x - head_control_space;
+                        var head_control_left_x = forehead_left_x + head_control_space;
+
+                        face_coords += `M ${jaw_left_x} ${jaw_y}`;
+                        face_coords += ` Q ${center_x} ${jaw_control_y}, ${jaw_right_x} ${jaw_y}`;
+                        face_coords += ` Q ${forehead_right_x} ${forehead_control_y}, ${forehead_right_x} ${forehead_y}`;
+                        face_coords += ` C ${head_control_right_x} ${head_top}, ${head_control_left_x} ${head_top}, ${forehead_left_x} ${forehead_y}`;
+                        face_coords += `Q ${forehead_left_x} ${forehead_control_y}, ${jaw_left_x} ${jaw_y}`;
+
+                        return face_coords;
+                    }
+
+                    var draw_face = function (coords) {
+                        neck_colour = calc_neck_colour(skin_colour);
+                        neck_shadow_colour = calc_neck_shadow_colour(skin_colour);
+                        //eyebrow_colour = calc_eyebrow_colour(hair_colour);
+                        draw_neck();
+                        draw_neck_shadow();
+                        draw_eyebrows();
+
+                        var face_element = document.getElementById(`face${counter}`);
+                        if (face_element) {
+                            face_group.removeChild(face_element);
+                        }
+                        var face_path = document.createElementNS(svgns, "path");
+                        face_path.setAttributeNS(null, `id`, `face${counter}`);
+                        face_path.setAttributeNS(null, `style`, `fill: ${skin_colour}`);
+                        face_path.setAttributeNS(null, `d`, coords);
+                        face_group.appendChild(face_path);
+                    }
+
+                    var draw_hair = function () {
+                        if (hair_type == 1) {
+                            console.log("DRAW HAIR 1")
+                            draw_hair_1();
+                        } else {
+                            draw_hair_none();
+                        }
+                    }
+
+                    var draw_hair_none = function () {
+                        var hair_element = document.getElementById(`hair${counter}`);
+                        if (hair_element) {
+                            behind_face_group.removeChild(hair_element);
+                        }
+                    }
+
+                    var draw_hair_1 = function () {
+                        draw_hair_none();
+                        var face_element = document.getElementById(`face${counter}`);
+                        var face_bbox = face_element.getBBox();
+                        console.log(face_bbox);
+                        var hair_afro_element = document.createElementNS(svgns, "ellipse");
+                        hair_afro_element.setAttributeNS(null, 'id', `hair${counter}`);
+                        hair_afro_element.setAttributeNS(null, 'style', `fill: ${hair_colour}`);
+                        hair_afro_element.setAttributeNS(null, 'rx', `${(face_bbox['width'] + afro_width) / 2}`);
+                        hair_afro_element.setAttributeNS(null, 'ry', `${(face_bbox['height']) / afro_height}`);
+                        hair_afro_element.setAttributeNS(null, 'cx', `${head_center}`);
+                        hair_afro_element.setAttributeNS(null, 'cy', `${head_center - ((face_bbox['width']) / 2)}`);
+
+                        behind_face_group.appendChild(hair_afro_element);
+                    }
+
+                    add_background(create_background(background_colour, background_radius));
+                    var face_coords = (calc_coords());
+                    draw_face(face_coords);
+                    draw_body();
+                    draw_hair();
+
+                    var change_skin = function (colour) {
+                        skin_colour = colour;
+                        var new_face_coords = calc_coords();
+                        draw_face(new_face_coords);
+                    }
+
+                    var change_jaw_width = function (slider) {
+                        var value = parseInt(slider.value);
+                        jaw_width = value;
+                        var new_face_coords = calc_coords();
+                        draw_face(new_face_coords);
+                    }
+
+                    var change_jaw_y_pos = function (slider) {
+                        var value = parseInt(slider.value);
+                        jaw_y_pos = value;
+                        console.log(jaw_y_pos);
+                        var new_face_coords = calc_coords();
+                        draw_face(new_face_coords);
+                    }
+
+                    var change_forehead_width = function (slider) {
+                        var value = parseInt(slider.value);
+                        forehead_width = value;
+                        var new_face_coords = calc_coords();
+                        draw_face(new_face_coords);
+                        draw_hair();
+                    }
+
+                    var change_forehead_y_pos = function (slider) {
+                        var value = parseInt(slider.value);
+                        forehead_y_pos = value;
+                        console.log(forehead_y_pos);
+                        var new_face_coords = calc_coords();
+                        draw_face(new_face_coords);
+                        draw_hair();
+                    }
+
+                    var change_neck_width = function (slider) {
+                        var value = parseInt(slider.value);
+                        neck_width = value;
+                        console.log(neck_width);
+                        draw_neck();
+                    }
+
+                    var change_bg_shape = function (shape) {
+                        if (shape == 'circle') {
+                            background_radius = 100;
+                        } else if (shape == 'rect') {
+                            background_radius = 0;
+                        }
+
+                        add_background(create_background());
+                    }
+
+                    var change_bg_colour = function (colour) {
+                        background_colour = colour;
+                        add_background(create_background());
+                    }
+
+                    var change_body_colour = function (colour) {
+                        body_colour = colour;
+                        draw_body();
+                    }
+
+                    var change_eyebrow_pos_x = function (slider) {
+                        var value = parseInt(slider.value);
+                        eyebrow_pos_x = value;
+                        draw_eyebrows();
+                    }
+
+                    var change_eyebrow_colour = function (colour) {
+                        eyebrow_colour = colour;
+                        draw_eyebrows();
+                    }
+
+                    var change_eyebrow_pos_y = function (slider) {
+                        var value = parseInt(slider.value);
+                        eyebrow_pos_y = value;
+                        draw_eyebrows();
+                    }
+
+                    var change_eyebrow_curve = function (slider) {
+                        var value = parseInt(slider.value);
+                        eyebrow_curve = value;
+                        draw_eyebrows();
+                    }
+
+                    var change_eyebrow_angle = function (slider) {
+                        var value = parseInt(slider.value);
+                        eyebrow_rotation = value;
+                        draw_eyebrows();
+                    }
+
+                    var change_eyebrow_width = function (slider) {
+                        var value = parseInt(slider.value);
+                        eyebrow_width = value;
+                        draw_eyebrows();
+                    }
+
+                    var change_eyebrow_height = function (slider) {
+                        var value = parseInt(slider.value);
+                        eyebrow_height = value;
+                        draw_eyebrows();
+                    }
+
+                    var change_hair_height = function (slider) {
+                        var value = parseInt(slider.value);
+                        afro_height = value;
+                        draw_hair();
+                    }
+
+                    var change_hair_width = function (slider) {
+                        var value = parseInt(slider.value);
+                        afro_width = value;
+                        draw_hair();
+                    }
+
+                    var change_hair_type = function (value) {
+                        var value = parseInt(value);
+                        hair_type = value;
+                        draw_hair();
+                    }
+
+                    var change_hair_colour = function (colour) {
+                        hair_colour = colour;
+                        draw_hair();
+                    }
+
+                    var active_options = "background";
+
+                    var toggle = function (category) {
+                        var visible_icon = document.getElementById(`${category}-visible-icon`);
+                        var category_options = document.getElementById(`${category}-options-div`);
+                        if (visible_icon.classList.contains("hide-options-icon")) {
+                            if (category == active_options) {
+                                active_options = null;
+                            }
+                            visible_icon.classList.remove("hide-options-icon");
+                            visible_icon.classList.add("show-options-icon");
+                            category_options.classList.remove("visible-options");
+                            category_options.classList.add("hidden-options");
+                        } else {
+                            if (active_options != null) {
+                                toggle(active_options);
+                            }
+                            active_options = category;
+                            visible_icon.classList.remove("show-options-icon");
+                            visible_icon.classList.add("hide-options-icon");
+                            category_options.classList.remove("hidden-options");
+                            category_options.classList.add("visible-options");
+                        }
+                    }
+                </script>
+            </div>
+
+            <div class="options-container">
+                <div id="background_container">
+                    <div class="options-section-title">
+                        <h1>Background</h1>
+                        <div id="background-visible-icon" class="show-hide-options hide-options-icon"
+                            onclick="toggle('background')"></div>
+                    </div>
+                    <div id="background-options-div" class="options-section-options visible-options">
+                        <label class="options-section-subtitle">Background Colour</label>
+                        <div class="bg_colour" style="background-color: #FFCCF9;" onclick="change_bg_colour('#FFCCF9')">
+                        </div>
+                        <div class="bg_colour" style="background-color: #FBE4FF;" onclick="change_bg_colour('#FBE4FF')">
+                        </div>
+                        <div class="bg_colour" style="background-color: #D5AAFF;" onclick="change_bg_colour('#D5AAFF')">
+                        </div>
+                        <div class="bg_colour" style="background-color: #DCD3FF;" onclick="change_bg_colour('#DCD3FF')">
+                        </div>
+                        <div class="bg_colour" style="background-color: #AFF8DB;" onclick="change_bg_colour('#AFF8DB')">
+                        </div>
+                        <div class="bg_colour" style="background-color: #aaf5a6;" onclick="change_bg_colour('#aaf5a6')">
+                        </div>
+                        <div class="bg_colour" style="background-color: #a6f5e5;" onclick="change_bg_colour('#a6f5e5')">
+                        </div>
+                        <div class="bg_colour" style="background-color: #f5a6ae;" onclick="change_bg_colour('#f5a6ae')">
+                        </div>
+                        <div class="bg_colour" style="background-color: #222222;" onclick="change_bg_colour('#222222')">
+                        </div>
+                    </div>
+                </div>
+
+                <div id="eyebrow_container">
+                    <div class="options-section-title">
+                        <h1>Eyebrow Details</h1>
+                        <div id="eyebrow-visible-icon" class="show-hide-options show-options-icon"
+                            onclick="toggle('eyebrow')"></div>
+                    </div>
+                    <div id="eyebrow-options-div" class="options-section-options hidden-options">
+                        <label class="options-section-subtitle">Eyebrow Colour</label>
+                        <div class="colour_option" style="background-color: #090806;"
+                            onclick="change_eyebrow_colour('#090806')">
+                        </div>
+                        <div class="colour_option" style="background-color: #2C222B;"
+                            onclick="change_eyebrow_colour('#2C222B')">
+                        </div>
+                        <div class="colour_option" style="background-color: #E6CEA8;"
+                            onclick="change_eyebrow_colour('#E6CEA8')">
+                        </div>
+                        <div class="colour_option" style="background-color: #A7856A;"
+                            onclick="change_eyebrow_colour('#A7856A')">
+                        </div>
+                        <div class="colour_option" style="background-color: #8D4a43;"
+                            onclick="change_eyebrow_colour('#8D4a43')">
+                        </div>
+
+                        <label class="options-section-subtitle" for="slider_eyebrow_pos_x">X Position</label>
+                        <input id="slider_eyebrow_pos_x" type="range" min="8" max="12" value="10"
+                            oninput="change_eyebrow_pos_x(this)">
+                        <br>
+                        <label class="options-section-subtitle" for="slider_eyebrow_pos_y">Y Position</label>
+                        <input id="slider_eyebrow_pos_y" type="range" min="8" max="12" value="10"
+                            oninput="change_eyebrow_pos_y(this)">
+                        <br>
+                        <label class="options-section-subtitle" for="slider_eyebrow_curve">Eyebrow Curve:</label>
+                        <input id="slider_eyebrow_curve" type="range" min="1" max="4" value="3"
+                            oninput="change_eyebrow_curve(this)">
+                        <br>
+                        <label class="options-section-subtitle" for="slider_eyebrow_angle">Eyebrow Angle:</label>
+                        <input id="slider_eyebrow_angle" type="range" min="-5" max="20" value="0"
+                            oninput="change_eyebrow_angle(this)">
+                        <br>
+
+                        <label class="options-section-subtitle" for="slider_eyebrow_width">Eyebrow Length:</label>
+                        <input id="slider_eyebrow_width" type="range" min="18" max="22" value="20"
+                            oninput="change_eyebrow_width(this)">
+                        <br>
+
+                        <label class="options-section-subtitle" for="slider_eyebrow_height">Eyebrow Thickness:</label>
+                        <input id="slider_eyebrow_height" type="range" min="5" max="9" value="7"
+                            oninput="change_eyebrow_height(this)">
+                        <br>
+                    </div>
+                </div>
+
+                <div id="skin_container">
+                    <div class="options-section-title">
+                        <h1>Skin</h1>
+                        <div id="skin-visible-icon" class="show-hide-options show-options-icon"
+                            onclick="toggle('skin')"></div>
+                    </div>
+                    <div id="skin-options-div" class="options-section-options hidden-options">
+                        <label class="options-section-subtitle">Skin Colour</label>
+                        <div class="skin_colour" style="background-color: #8D5524;" onclick="change_skin('#8D5524')">
+                        </div>
+                        <div class="skin_colour" style="background-color: #C68642;" onclick="change_skin('#C68642')">
+                        </div>
+                        <div class="skin_colour" style="background-color: #E0AC69;" onclick="change_skin('#E0AC69')">
+                        </div>
+                        <div class="skin_colour" style="background-color: #F1C27D;" onclick="change_skin('#F1C27D')">
+                        </div>
+                        <div class="skin_colour" style="background-color: #FFDBAC;" onclick="change_skin('#FFDBAC')">
+                        </div>
+                    </div>
+                </div>
+
+                <div id="face_container">
+                    <div class="options-section-title">
+                        <h1>Face/Neck Attributes</h1>
+                        <div id="face-visible-icon" class="show-hide-options show-options-icon"
+                            onclick="toggle('face')"></div>
+                    </div>
+                    <div id="face-options-div" class="options-section-options hidden-options">
+                        <label class="options-section-subtitle" for="slider_jaw_width">Jaw Width</label>
+                        <input id="slider_jaw_width" type="range" min="60" max="70" value="65"
+                            oninput="change_jaw_width(this)">
+                        <br>
+                        <label class="options-section-subtitle" for="slider_jaw_y_pos">Jaw Height</label>
+                        <input id="slider_jaw_y_pos" type="range" min="15" max="25" value="20"
+                            oninput="change_jaw_y_pos(this)">
+                        <br>
+                        <label class="options-section-subtitle" for="slider_forehead_width">Forehead Width</label>
+                        <input id="slider_forehead_width" type="range" min="70" max="80" value="75"
+                            oninput="change_forehead_width(this)">
+                        <br>
+                        <label class="options-section-subtitle" for="slider_forehead_y_pos">Forehead Height</label>
+                        <input id="slider_forehead_y_pos" type="range" min="30" max="40" value="35"
+                            oninput="change_forehead_y_pos(this)">
+                        <br>
+                        <label class="options-section-subtitle" for="slider_neck_width">Neck Width</label>
+                        <input id="slider_neck_width" type="range" min="48" max="52" value="50"
+                            oninput="change_neck_width(this)">
+                        <br>
+                    </div>
+                </div>
+
+                <div id="hair_container">
+                    <div class="options-section-title">
+                        <h1>Hair</h1>
+                        <div id="hair-visible-icon" class="show-hide-options show-options-icon"
+                            onclick="toggle('hair')"></div>
+                    </div>
+                    <div id="hair-options-div" class="options-section-options hidden-options">
+                        <label class="options-section-subtitle">Hair Colour</label>
+                        <div class="colour_option" style="background-color: #090806;"
+                            onclick="change_hair_colour('#090806')">
+                        </div>
+                        <div class="colour_option" style="background-color: #2C222B;"
+                            onclick="change_hair_colour('#2C222B')">
+                        </div>
+                        <div class="colour_option" style="background-color: #E6CEA8;"
+                            onclick="change_hair_colour('#E6CEA8')">
+                        </div>
+                        <div class="colour_option" style="background-color: #A7856A;"
+                            onclick="change_hair_colour('#A7856A')">
+                        </div>
+                        <div class="colour_option" style="background-color: #8D4a43;"
+                            onclick="change_hair_colour('#8D4a43')">
+                        </div>
+
+                        <label class="options-section-subtitle">Hair Style</label>
+                        <div class="option-button" onclick="change_hair_type(0)">Bald</div>
+                        <div class="option-button" onclick="change_hair_type(1)">Hair</div>
+
+                        <div id="hair-attributes" class="visible-options">
+                            <label class="options-section-subtitle" for="slider_hair_width">Hair Width</label>
+                            <input id="slider_hair_width" type="range" min="0" max="10" value="5"
+                                oninput="change_hair_width(this)">
+                            <br>
+                            <label class="options-section-subtitle" for="slider_hair_height">Hair Height</label>
+                            <input id="slider_hair_height" type="range" min="2" max="3" value="3"
+                                oninput="change_hair_height(this)">
+                            <br>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="body_container">
+                    <div class="options-section-title">
+                        <h1>Body</h1>
+                        <div id="body-visible-icon" class="show-hide-options show-options-icon"
+                            onclick="toggle('body')"></div>
+                    </div>
+                    <div id="body-options-div" class="options-section-options hidden-options">
+                        <label class="options-section-subtitle">Body Colour</label>
+                        <div class="colour_option" style="background-color: #006347;"
+                            onclick="change_body_colour('#006347')">
+                        </div>
+                        <div class="colour_option" style="background-color: #608921;"
+                            onclick="change_body_colour('#608921')">
+                        </div>
+                        <div class="colour_option" style="background-color: #019477;"
+                            onclick="change_body_colour('#019477')">
+                        </div>
+                        <div class="colour_option" style="background-color: #97D0A7;"
+                            onclick="change_body_colour('#97D0A7')">
+                        </div>
+                        <div class="colour_option" style="background-color: #54B9C1;"
+                            onclick="change_body_colour('#54B9C1')">
+                        </div><br>
+                        <div class="colour_option" style="background-color: #5C589D;"
+                            onclick="change_body_colour('#5C589D')">
+                        </div>
+                        <div class="colour_option" style="background-color: #9C58A1;"
+                            onclick="change_body_colour('#9C58A1')">
+                        </div>
+                        <div class="colour_option" style="background-color: #D38895;"
+                            onclick="change_body_colour('#D38895')">
+                        </div>
+                        <div class="colour_option" style="background-color: #DD3F4E;"
+                            onclick="change_body_colour('#DD3F4E')">
+                        </div>
+                        <div class="colour_option" style="background-color: #6A6A68;"
+                            onclick="change_body_colour('#6A6A68')">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
