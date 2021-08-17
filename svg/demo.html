@@ -148,7 +148,7 @@
                     counter += 1;
 
 
-                    var svg_code = `<svg id="avatar${counter}" width="200px" height="200px" xmlns="http://www.w3.org/2000/svg"
+                    var svg_code = `<svg id="avatar${counter}" width="250px" height="250px" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"
                                 xmlns:xlink="http://www.w3.org/1999/xlink">
                                 <defs id="defs${counter}">
                                     <mask id="avatar_mask${counter}">
@@ -800,10 +800,11 @@
 
             <div class="options-container">
                 <div id="background_container">
-                    <div class="options-section-title">
+                    <div class="options-section-title" onclick="toggle('background')">
                         <h1>Background</h1>
-                        <div id="background-visible-icon" class="show-hide-options hide-options-icon"
-                            onclick="toggle('background')"></div>
+                        <div class="toggle-options-container">
+                            <div id="background-visible-icon" class="show-hide-options hide-options-icon"></div>
+                        </div>
                     </div>
                     <div id="background-options-div" class="options-section-options visible-options">
                         <label class="options-section-subtitle">Background Colour</label>
@@ -829,10 +830,11 @@
                 </div>
 
                 <div id="eyebrow_container">
-                    <div class="options-section-title">
+                    <div class="options-section-title" onclick="toggle('eyebrow')">
                         <h1>Eyebrow Details</h1>
-                        <div id="eyebrow-visible-icon" class="show-hide-options show-options-icon"
-                            onclick="toggle('eyebrow')"></div>
+                        <div class="toggle-options-container">
+                            <div id="eyebrow-visible-icon" class="show-hide-options show-options-icon"></div>
+                        </div>
                     </div>
                     <div id="eyebrow-options-div" class="options-section-options hidden-options">
                         <label class="options-section-subtitle">Eyebrow Colour</label>
@@ -882,10 +884,11 @@
                 </div>
 
                 <div id="skin_container">
-                    <div class="options-section-title">
+                    <div class="options-section-title" onclick="toggle('skin')">
                         <h1>Skin</h1>
-                        <div id="skin-visible-icon" class="show-hide-options show-options-icon"
-                            onclick="toggle('skin')"></div>
+                        <div class="toggle-options-container">
+                            <div id="skin-visible-icon" class="show-hide-options show-options-icon"></div>
+                        </div>
                     </div>
                     <div id="skin-options-div" class="options-section-options hidden-options">
                         <label class="options-section-subtitle">Skin Colour</label>
@@ -903,10 +906,11 @@
                 </div>
 
                 <div id="face_container">
-                    <div class="options-section-title">
+                    <div class="options-section-title" onclick="toggle('face')">
                         <h1>Face/Neck Attributes</h1>
-                        <div id="face-visible-icon" class="show-hide-options show-options-icon"
-                            onclick="toggle('face')"></div>
+                        <div class="toggle-options-container">
+                            <div id="face-visible-icon" class="show-hide-options show-options-icon"></div>
+                        </div>
                     </div>
                     <div id="face-options-div" class="options-section-options hidden-options">
                         <label class="options-section-subtitle" for="slider_jaw_width">Jaw Width</label>
@@ -933,10 +937,11 @@
                 </div>
 
                 <div id="hair_container">
-                    <div class="options-section-title">
+                    <div class="options-section-title" onclick="toggle('hair')">
                         <h1>Hair</h1>
-                        <div id="hair-visible-icon" class="show-hide-options show-options-icon"
-                            onclick="toggle('hair')"></div>
+                        <div class="toggle-options-container">
+                            <div id="hair-visible-icon" class="show-hide-options show-options-icon"></div>
+                        </div>
                     </div>
                     <div id="hair-options-div" class="options-section-options hidden-options">
                         <label class="options-section-subtitle">Hair Colour</label>
@@ -974,10 +979,11 @@
                 </div>
 
                 <div id="body_container">
-                    <div class="options-section-title">
+                    <div class="options-section-title" onclick="toggle('body')">
                         <h1>Body</h1>
-                        <div id="body-visible-icon" class="show-hide-options show-options-icon"
-                            onclick="toggle('body')"></div>
+                        <div class="toggle-options-container">
+                            <div id="body-visible-icon" class="show-hide-options show-options-icon"></div>
+                        </div>
                     </div>
                     <div id="body-options-div" class="options-section-options hidden-options">
                         <label class="options-section-subtitle">Body Colour</label>
